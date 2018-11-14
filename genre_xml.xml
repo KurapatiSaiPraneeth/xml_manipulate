@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genres xmlns="http://genre.cms.myplex.tv/1">
+   <genre id="1864" name="Genre" type="Text" value="Action adventure" />
+   <genre id="1863" name="Genre" type="Text" value="Adventure" />
+</genres>
