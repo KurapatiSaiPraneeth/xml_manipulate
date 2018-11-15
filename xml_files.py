@@ -8,16 +8,14 @@ base_path = os.path.dirname(os.path.realpath(__file__))
 # print(xml_path)
 
 
-with open('content_xml.xml') as content:
+with open('content_xml.xml') as content,open('genre_xml.xml') as genre,open('person_xml.xml') as person:
     content_tree = et.parse(content)
-
+    genre_tree = et.parse(genre)
+    person_tree = et.parse(person)
 
 content_root = content_tree.getroot()
-
-with open('genre_xml.xml') as genre:
-    genre_tree = et.parse(genre)
-
 genre_root = genre_tree.getroot()
+person_root = person_tree.getroot()
 
 
 # print(root.tag[:root.tag.rindex('}')+1])
@@ -46,33 +44,32 @@ for elem in content_tree.iter(tag=xmlns+'content'):
                     # print(c.attrib['name'],c.attrib['value'])
                 elif c.attrib['name'] == 'Genre':
                     # content_publish.update({'genre': [i.attrib['value'] for i in c]})
-                    for i in c:
-                        for tag in genre_root:
-                            if i.attrib['value'] == tag.attrib.get("id"):
-                                content_publish.update({c.attrib['name']: tag.attrib.get("id")})
+                    content_publish.update({'genre':[tag.attrib.get("value") for tag in genre_root for i in c if i.attrib['value'] == tag.attrib.get("id")]})
+                        # for tag in genre_root:
+                        #
+                        #     if i.attrib['value'] == tag.attrib.get("id"):
+                        #
+                        #         content_publish.update({c.attrib['name']: tag.attrib.get("id")})
 
                         # print(c.attrib['name'],i.attrib['value'])
 
                 elif c.attrib['name'] == 'Person':
-                    content_publish.update({'actor':[i.attrib['value'] for i in c if i.attrib['name'] == 'Actor']})
-                    # for i in c:
-                    #     if i.attrib['name'] == 'Actor':
-                    #         print(i.attrib['name'],i.attrib['value'])
+                    print()
 
+                    # content_publish.update({'actor': [tag.attrib for tag in person_root for i in c if i.attrib['value'] == tag.attrib.get("id")]})
 
+                    actor ={'actor':[]}
+                    for i in c:
+                        if i.attrib['name'] == 'Actor':
+                            # print(i.attrib['name'],i.attrib['value'])
+                            for tag in person_root:
+                                if i.attrib['value'] == tag.attrib.get("id"):
+                                    for t in tag:
+                                        # print(t.attrib.get('value'))
+                                        actor['actor'].append(t.attrib.get('value'))
 
+                    content_publish.update(actor)
 
-
-
-
-# print(root.tag[:root.tag.rindex('}')+1])
-
-
-# print(content_publish.get("genre"))
 
 
 print(content_publish)
-
-
-
-
